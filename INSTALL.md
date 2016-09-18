@@ -37,15 +37,17 @@ sudo meteor --port 80
 ## 微信后台开发
 
 ### 新增meteor插件
-为了完成后台的开发，新增三个插件，crypto-sha1、iron:router和meteorhacks:ssr
+为了完成后台的开发，新增四个插件，crypto-sha1、iron:router、http和meteorhacks:ssr
 ```
 meteor add jparker:crypto-sha1
 meteor add iron:router
 meteor add meteorhacks:ssr
+meteor add http
 ```
 [sha1文档](https://atmospherejs.com/jparker/crypto-sha1)
 [router文档](http://iron-meteor.github.io/iron-router/)
 [ssr文档](https://atmospherejs.com/meteorhacks/ssr)
+[http文档](https://docs.meteor.com/api/http.html)
 
 ### 响应微信Token验证
 1. 在微信测试号网页中，填写**接口配置信息**，URL为`http://你的新域名/weixin`，Token请自定义一个密码（仅有你自己知道）
