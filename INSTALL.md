@@ -57,16 +57,16 @@ PS:如果启动失败，你可以查看错误信息，网上搜索后解决，�
     * 成功则显示`来自 某国 某省 某市 的 某某某 您好`
     * 失败则根据页面提示查找bug
 
-# 如果无法在80端口上启动meteor
+## 如果无法在80端口上启动meteor
 PS：如果你成功在80端口上启动meteor，请跳过本段
 使用一种叫做**nginx**的软件将http的80接口代理到meteor默认运行的3000接口上
 
-## 安装nginx
+### 安装nginx
 ```
 sudo apt-get nginx
 ```
 
-## 添加配置文件
+### 添加配置文件
 添加配置文件
 ```
 sudo touch /etc/nginx/conf.d/meteor.conf
@@ -88,7 +88,7 @@ server{
 sudo vim /etc/nginx/nginx.conf
 ```
 
-## 重启nginx
+### 重启nginx
 ```
 sudo service nginx restart
 ```
