@@ -44,3 +44,6 @@ exports.url = "YOUR_DOMAIN_NAME" //只填写域名，比如your.domain.name
 * 更多安装部署指南参考[INSTALL.md](https://coding.net/u/mengning/p/kingke/git/blob/master/INSTALL.md)
 
 
+## Links
+
+* [快速搭建基于meteor的微信公众号开发环境](https://coding.net/u/mengning/p/kingke/git/tree/v0.0.1)
