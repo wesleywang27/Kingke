@@ -26,10 +26,6 @@ vim server/config.js
 
 ### 初次启动项目
 ```
-meteor add jparker:crypto-sha1
-meteor add iron:router
-meteor add meteorhacks:ssr
-meteor add http
 meteor
 ```
 此时你可以在`http://你服务器的ip地址:3000`上看到运行效果
