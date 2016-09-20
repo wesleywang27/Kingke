@@ -93,9 +93,12 @@ server{
 }
 ```
 
-查看nginx.conf配置文件，保证配置项`include /etc/nginx/conf.d/*.conf`前没有#号
+修改nginx.conf配置文件 大约在70行左右 加上#号
 ```
 sudo vim /etc/nginx/nginx.conf
+```
+```
+#include /etc/nginx/sites-enabled/*
 ```
 
 ### 重启nginx
