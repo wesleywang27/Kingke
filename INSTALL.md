@@ -73,7 +73,7 @@ PS：如果你成功在80端口上启动meteor，请跳过本段
 
 ### 安装nginx
 ```
-sudo apt-get nginx
+sudo apt-get install nginx
 ```
 
 ### 添加配置文件
