@@ -2,7 +2,7 @@
 
 ## 开发准备
 
-* [微信公众平台测试号](mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)
+* [微信公众平台测试号](http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)
 * 一台服务器（本人使用ubuntu 14.0 64位）
 * [meteor文档](https://www.meteor.com/tutorials/blaze/creating-an-app)
 
