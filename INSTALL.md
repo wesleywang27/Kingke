@@ -71,11 +71,11 @@ PS:如果启动失败，你可以查看错误信息，网上搜索后解决，�
     * 复制模板ID到config.js中
     * 点击发通知按钮即可发送
 ```
-{{first.DATA}}
-课程名：{{keyword1.DATA}}
-教师：{{keyword2.DATA}}
-时间：{{keyword3.DATA}}
-{{remark.DATA}}
+\{\{first.DATA\}\}
+课程名：\{\{keyword1.DATA\}\}
+教师：\{\{keyword2.DATA\}\}
+时间：\{\{keyword3.DATA\}\}
+\{\{remark.DATA\}\}
 ```
 
 ## 如果无法在80端口上启动meteor
