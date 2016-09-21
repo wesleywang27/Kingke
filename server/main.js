@@ -33,13 +33,14 @@ Meteor.startup(() => {
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
       var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
-      var menu_data = '{"button":[{"type":"view","name":"查看个人信息","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}';
-      var menu_result = HTTP.post(menu_url, {content: menu_data});
+      var menu_data = '{"button":[{"type":"view","name":"动态","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnews&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{ "type":"view","name":"课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"name":"更多","sub_button":[{"type":"view","name":"课程管理","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_manage&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"联系人","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcontacts&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"发通知","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnotice&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"我的名片","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}]}';
+      var menu_result = HTTP.post(menu_url,{content: menu_data});
       res.end("set success" + menu_result.content);
     } catch (err) {
       res.end("network error " + err);
     }
   }, {where: 'server'});
+  
 
   Router.route('/info', function () {
     var req = this.request;
@@ -70,4 +71,55 @@ Meteor.startup(() => {
       console.log("network error " + err);
     }
   }, {where: 'server'});
+
+  Router.route('/news', function () {
+	//coding here
+	var res = this.response;
+	SSR.compileTemplate('news', Assets.getText('news.html'));
+      Template.news.helpers({
+        
+      });
+      var html = SSR.render("news");
+      res.end(html);
+  },{where: 'server'});
+  Router.route('/course', function () {
+	//coding here
+	var res = this.response;
+	SSR.compileTemplate('course', Assets.getText('course.html'));
+      Template.course.helpers({
+        
+      });
+      var html = SSR.render("course");
+      res.end(html);
+  },{where: 'server'});
+  Router.route('/course_manage', function () {
+	//coding here
+	var res = this.response;
+	SSR.compileTemplate('course_manage', Assets.getText('course_manage.html'));
+      Template.course_manage.helpers({
+        
+      });
+      var html = SSR.render("course_manage");
+      res.end(html);
+  },{where: 'server'});
+  Router.route('/contacts', function () {
+	//coding here
+	var res = this.response;
+	SSR.compileTemplate('contacts', Assets.getText('contacts.html'));
+      Template.news.helpers({
+        
+      });
+      var html = SSR.render("contacts");
+      res.end(html);
+  },{where: 'server'});
+  Router.route('/notice', function () {
+	//coding here
+	var res = this.response;
+	SSR.compileTemplate('notice', Assets.getText('notice.html'));
+      Template.notice.helpers({
+        
+      });
+      var html = SSR.render("notice");
+      res.end(html);
+  },{where: 'server'});
 });
