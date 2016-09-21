@@ -26,13 +26,23 @@ vim server/config.js
 
 ### 初次启动项目
 ```
-meteor add jparker:crypto-sha1
-meteor add iron:router
-meteor add meteorhacks:ssr
-meteor add http
 meteor
 ```
 此时你可以在`http://你服务器的ip地址:3000`上看到运行效果
+
+#### 插件说明
+* jparker:crypto-sha1
+    * 提供sha1加密函数，在微信token验证中使用
+    * [文档地址](https://github.com/p-j/meteor-crypto-sha1)
+* iron:router
+    * 为meteor提供路由功能，方便创建不同的访问路径以满足不同的功能
+    * [文档地址](http://iron-meteor.github.io/iron-router/)
+* meteorhacks:ssr
+    * 为server端函数提供返回html模板的功能，meteor原生只有在client中的函数能调用html模板
+    * [文档地址](https://atmospherejs.com/meteorhacks/ssr)
+* http
+    * meteor原生api，为项目提供http请求的方法，用于与微信服务器交互
+    * [文档地址](https://docs.meteor.com/api/http.html)
 
 ### 为你的ip绑定域名
 1. 因为微信官方为了安全需要，只有绑定域名的服务器才能提供微信后台服务，所以请自己为服务器绑定域名,或向老师寻求帮助。
@@ -63,7 +73,7 @@ PS：如果你成功在80端口上启动meteor，请跳过本段
 
 ### 安装nginx
 ```
-sudo apt-get nginx
+sudo apt-get install nginx
 ```
 
 ### 添加配置文件
@@ -83,9 +93,12 @@ server{
 }
 ```
 
-查看nginx.conf配置文件，保证配置项`include /etc/nginx/conf.d/*.conf`前没有#号
+修改nginx.conf配置文件 大约在70行左右 加上#号
 ```
 sudo vim /etc/nginx/nginx.conf
+```
+```
+#include /etc/nginx/sites-enabled/*
 ```
 
 ### 重启nginx
