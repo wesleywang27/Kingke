@@ -39,6 +39,7 @@ exports.token = "YOUR_TOKEN"; //自己定义,与申请测试号时填写一致�
 exports.appID = "YOUR_APPID"; 
 exports.appsecret = "YOUR_APPSECRET";
 exports.url = "YOUR_DOMAIN_NAME" //只填写域名，比如your.domain.name
+exports.notify_templet_id = "YOUR_TEMPLET_ID"; //你的通知模板ID
 ```
 * 通过访问http://your.domain.name/setmenu 设置菜单后，即可通过测试号demo项目功能
 * 更多安装部署指南参考[INSTALL.md](https://coding.net/u/mengning/p/kingke/git/blob/master/INSTALL.md)

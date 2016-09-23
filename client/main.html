@@ -1,14 +1,49 @@
 <head>
   <title>kingke</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
 </head>
-
 <body>
+  
+  <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </body>
 
 <template name="Home">
   <h1>hello everyone</h1>
+  <a class="btn btn-default" href="/setmenu">设置菜单按钮</a>
+  <a class="btn btn-success" href="/notify">通知</a>
 </template>
 
-<template name="userinfo">
+<template name="Notify">
+  <div class="container-fluid" style="padding-top: 50px;">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-xs-12">
+        <form action="/notifyAns" method="post" role="form">
+          <div class="form-group">
+            <label for="infoBegin">通知详情</label>
+            <input type="text" name="infoBegin" id="infoBegin" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="openIds">收件人</label>
+            <textarea name="openIds" id="openIds" placeholder="收件人-openId-回车符分隔" rows="5" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="course">课程名</label>
+            <input type="text" name="course" id="course" placeholder="课程名" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="teacher">教师</label>
+            <input type="text" name="teacher" id="teacher" placeholder="教师" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="infoEnd">结尾</label>
+            <input type="text" name="infoEnd" id="infoEnd" placeholder="结尾" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-default">通知</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
