@@ -1,49 +1,51 @@
-<html>
+<!doctype html>
 <head>
   <title>个人名片</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="/weui.css">
 </head>
 <body>
-<div class="weui_cells">
-  <div class="weui_cell">
-    <div class="weui_cell_bd weui_cell_primary">
-      <p>头像</p>
-    </div>
-    <div class="weui_cell_ft">
-      <img src="{{headimgurl}}" alt="icon" style="width:70px;margin-right:5px;display:block">
-    </div>
-  </div>
-</div>
-<div class="weui_cells">
-  <div class="weui_cell">
-    <div class="weui_cell_bd weui_cell_primary">
-      <p>昵称</p>
-    </div>
-    <div class="weui_cell_ft">
-      {{nickname}}
-    </div>
-  </div>
-</div>
-<div class="weui_cells">
-  <div class="weui_cell">
-    <div class="weui_cell_bd weui_cell_primary">
-      <p>性别</p>
-    </div>
-    <div class="weui_cell_ft">
-      {{sex}}
-    </div>
-  </div>
-</div>
-<div class="weui_cells">
-  <div class="weui_cell">
-    <div class="weui_cell_bd weui_cell_primary">
-      <p>地区</p>
-    </div>
-    <div class="weui_cell_ft">
-      {{country}} {{province}} {{city}}
-    </div>
-  </div>
-</div>
+	<div class="weui_cells weui_cells_form">
+		<div class="weui_cells">
+		  <div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+			  <p>头像</p>
+			</div>
+			<div class="weui_cell_ft">
+			  <img src="{{headimgurl}}" alt="icon" style="width:70px;margin-right:5px;display:block">
+			</div>
+		  </div>
+		</div>
+		<div class="weui_cells">
+		  <div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+			  <p>昵称</p>
+			</div>
+			<div class="weui_cell_ft">
+			  {{nickname}}
+			</div>
+		  </div>
+		</div>
+		<div class="weui_cells">
+		  <div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+			  <p>性别</p>
+			</div>
+			<div class="weui_cell_ft">
+			  {{sex}}
+			</div>
+		  </div>
+		</div>
+		<div class="weui_cells">
+		  <div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+			  <p>地区</p>
+			</div>
+			<div class="weui_cell_ft">
+			  {{country}} {{province}} {{city}}
+			</div>
+		  </div>
+		</div>
+	</div>
 </body>
 </html>
