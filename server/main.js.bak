@@ -65,7 +65,7 @@ Meteor.startup(() => {
 
       SSR.compileTemplate('info', Assets.getText('info.html'));
       Template.info.helpers({
-		sex: userinfo_data.sex,
+		sex: sex,
         country: userinfo_data.country,
         province: userinfo_data.province,
         city: userinfo_data.city,

@@ -59,9 +59,9 @@ Meteor.startup(() => {
 
 	  var sex;
 	  if(userinfo_data.sex == 1)
-		  sex == "男";
+		  sex = "男";
 	  else
-		  sex == "女";
+		  sex = "女";
 
       SSR.compileTemplate('info', Assets.getText('info.html'));
       Template.info.helpers({
