@@ -57,8 +57,15 @@ Meteor.startup(() => {
       var userinfo_result = HTTP.get(userinfo_url);
       var userinfo_data = JSON.parse(userinfo_result.content);
 
+	  var sex;
+	  if(userinfo_data.sex == 1)
+		  sex == "男";
+	  else
+		  sex == "女";
+
       SSR.compileTemplate('info', Assets.getText('info.html'));
       Template.info.helpers({
+		sex: userinfo_data.sex,
         country: userinfo_data.country,
         province: userinfo_data.province,
         city: userinfo_data.city,
