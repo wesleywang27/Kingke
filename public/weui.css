@@ -359,7 +359,7 @@ input.weui_btn_plain_default {
 .weui_cells {
   background-color: #FFFFFF;
   line-height: 1.41176471;
-  font-size: 36px;
+  font-size: 72px;
   overflow: hidden;
   position: relative;
 }
