@@ -2,9 +2,51 @@
 <head>
   <title>个人名片</title>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="weui.css">
 </head>
 <body>
 <h1>来自 {{country}} {{province}} {{city}} 的 {{nickname}} 性别 {{sex}} 您好</h1>
 <img src="{{headimgurl}}">
+
+<div class="weui_cells">
+  <div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+      <p>头像</p>
+    </div>
+    <div class="weui_cell_ft">
+      <img src="{{headimgurl}}">
+    </div>
+  </div>
+</div>
+<div class="weui_cells">
+  <div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+      <p>昵称</p>
+    </div>
+    <div class="weui_cell_ft">
+      {{nickname}}
+    </div>
+  </div>
+</div>
+<div class="weui_cells">
+  <div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+      <p>性别</p>
+    </div>
+    <div class="weui_cell_ft">
+      {{sex}}
+    </div>
+  </div>
+</div>
+<div class="weui_cells">
+  <div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+      <p>地区</p>
+    </div>
+    <div class="weui_cell_ft">
+      {{country}} {{province}} {{city}}
+    </div>
+  </div>
+</div>
 </body>
 </html>
