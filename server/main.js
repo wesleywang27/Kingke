@@ -66,7 +66,7 @@ Meteor.startup(() => {
       var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
-      var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
+      var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token=" + access_token;
       var menu_data = '{"button":[' +
           '{"type":"view","name":"课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnews&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},' +
           '{ "type":"view","name":"群组","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},' +
