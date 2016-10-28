@@ -35,7 +35,7 @@ Meteor.startup(() => {
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
 	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=" + access_token;
-	  var group_data = '{"group":{"name":"教师"}}';
+	  var group_data = '{"group":{"name":"学生"}}';
 	  var group_result = HTTP.post(group_url,{content: group_data});
 	  res.end("set_success" + group_result.content);
 	}catch (err){
