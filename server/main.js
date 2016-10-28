@@ -34,8 +34,8 @@ Meteor.startup(() => {
       var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
-	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=" + access_token;
-	  var group_data = '{"group":{"name":"超级用户"}}';
+	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/delete?access_token=" + access_token;
+	  var group_data = '{"group":{"id":104}}';
 	  var group_result = HTTP.post(group_url,{content: group_data});
 	  res.end("set_success" + group_result.content);
 	}catch (err){
