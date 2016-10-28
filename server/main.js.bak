@@ -5,6 +5,7 @@ var config = require("./config.js")
 Meteor.startup(() => {
   // code to run on server at startup
     
+
   Router.route('/weixin', function () {
     var req = this.request;
     var res = this.response;
@@ -26,6 +27,19 @@ Meteor.startup(() => {
     }
   }, {where: 'server'});
 
+
+  Router.route('/setgroup', function () {
+	var res = this.response;
+	try {
+      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
+      var token_result = HTTP.get(token_url);
+      var access_token = token_result.data.access_token;
+	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=" + access_token;
+	  var group_data = '{"group":[{"name":"未分组"}, {"name":"教师"}, {"name":"学生"}]}';
+	}
+  }
+
+
   Router.route('/setmenu', function () {
     var res = this.response;
     try {
@@ -33,7 +47,16 @@ Meteor.startup(() => {
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
       var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + access_token;
-      var menu_data = '{"button":[{"type":"view","name":"动态","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnews&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{ "type":"view","name":"课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"name":"更多","sub_button":[{"type":"view","name":"课程管理","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_manage&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"联系人","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcontacts&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"发通知","url":"http://' + config.url +'/notify"},{"type":"view","name":"我的名片","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}]}';
+      var menu_data = '{"button":[
+									{"type":"view","name":"课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnews&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},
+									{ "type":"view","name":"群组","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},
+									{"name":"个人中心","sub_button":[
+																		{"type":"view","name":"课程管理","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_manage&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},
+																		{"type":"view","name":"联系人","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcontacts&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},
+																		{"type":"view","name":"发通知","url":"http://' + config.url +'/notify"},
+																		{"type":"view","name":"我的名片","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}
+																	]}
+								]}';
       var menu_result = HTTP.post(menu_url,{content: menu_data});
       res.end("set success" + menu_result.content);
     } catch (err) {
@@ -59,9 +82,9 @@ Meteor.startup(() => {
 
 	  var sex;
 	  if(userinfo_data.sex == 1)
-		  sex == "男";
+		  sex = "男";
 	  else
-		  sex == "女";
+		  sex = "女";
 
       SSR.compileTemplate('info', Assets.getText('info.html'));
       Template.info.helpers({
@@ -78,6 +101,7 @@ Meteor.startup(() => {
       console.log("network error " + err);
     }
   }, {where: 'server'});
+
 
   Router.route("/notifyAns", function () {
     var req = this.request;
@@ -111,6 +135,7 @@ Meteor.startup(() => {
     res.end();
   }, {where: 'server'});
 
+
   Router.route('/news', function () {
     var res = this.response;
     SSR.compileTemplate('news', Assets.getText('news.html'));
@@ -120,6 +145,7 @@ Meteor.startup(() => {
     var html = SSR.render("news");
     res.end(html);
   },{where: 'server'});
+
 
   Router.route('/course', function () {
     var res = this.response;
@@ -131,6 +157,7 @@ Meteor.startup(() => {
     res.end(html);
   },{where: 'server'});
 
+
   Router.route('/course_manage', function () {
     var res = this.response;
     SSR.compileTemplate('course_manage', Assets.getText('course_manage.html'));
@@ -140,6 +167,7 @@ Meteor.startup(() => {
     var html = SSR.render("course_manage");
     res.end(html);
   },{where: 'server'});
+
 
   Router.route('/contacts', function () {
     var res = this.response;
