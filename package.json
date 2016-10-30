@@ -5,6 +5,9 @@
         "start": "meteor run"
     },
     "dependencies": {
-        "meteor-node-stubs": "~0.2.0"
+        "marked": "^0.3.6",
+        "meteor-node-stubs": "~0.2.0",
+        "wechat": "^2.0.3",
+        "wechat-api": "^1.24.0"
     }
 }
