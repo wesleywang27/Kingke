@@ -4,7 +4,6 @@ var config = require("./config.js")
 
 Meteor.startup(() => {
   // code to run on server at startup
-    
 
   Router.route('/weixin', function () {
     var req = this.request;
@@ -27,7 +26,6 @@ Meteor.startup(() => {
     }
   }, {where: 'server'});
 
-
   Router.route('/setgroups', function () {
 	var res = this.response;
 	try {
@@ -42,7 +40,6 @@ Meteor.startup(() => {
 	  res.end("network error " + err);
 	}
   }, {where: 'server'});
-
 
   Router.route('/setgroup', function () {
     var res = this.response;
@@ -59,7 +56,6 @@ Meteor.startup(() => {
     }
   }, {where: 'server'});
 
-
   Router.route('/setmenu', function () {
     var res = this.response;
     try {
@@ -74,7 +70,6 @@ Meteor.startup(() => {
       res.end("network error " + err);
     }
   }, {where: 'server'});
-  
 
   Router.route('/follow', function () {
     var res = this.response;
@@ -91,7 +86,16 @@ Meteor.startup(() => {
       res.end("network error " + err);
     }
   }, {where: 'server'});
-  
+
+   Router.route('/regist', function () {
+      var res = this.response;
+      SSR.compileTemplate('regist', Assets.getText('regist.html'));
+      Template.news.helpers({
+
+      });
+      var html = SSR.render("regist");
+      res.end(html);
+   },{where: 'server'});
 
   Router.route('/info', function () {
     var req = this.request;
