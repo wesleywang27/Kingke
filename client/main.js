@@ -11,3 +11,7 @@ Router.route('/', function () {
 Router.route('/notify', function () {
   this.render('Notify');
 });
+
+Router.route('/regit_student', function () {
+  this.render('Regist_Student');
+});
