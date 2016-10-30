@@ -90,7 +90,7 @@ Meteor.startup(() => {
    Router.route('/regist', function () {
       var res = this.response;
       SSR.compileTemplate('regist', Assets.getText('regist.html'));
-      Template.news.helpers({
+      Template.regist.helpers({
 
       });
       var html = SSR.render("regist");
