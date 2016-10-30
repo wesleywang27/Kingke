@@ -65,7 +65,7 @@ Meteor.startup(() => {
       var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
-      var follow_url = "https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token=" + access_token;
+      var follow_url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" + access_token;
       //var follow_data = '{"touser":"o0XCywvaCR--L3LBx5c-43X2VQvY", "msgtype":"text", "text":{"content":"鸽子 么么哒(づ￣ 3￣)づ"}}';
       //var follow_result = HTTP.post(follow_url,{content: follow_data});
       var follow_result = HTTP.get(follow_url);
