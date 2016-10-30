@@ -76,6 +76,22 @@ Meteor.startup(() => {
   }, {where: 'server'});
   
 
+  Router.route('/follow', function () {
+    var res = this.response;
+    try {
+      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
+      var token_result = HTTP.get(token_url);
+      var access_token = token_result.data.access_token;
+      var follow_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token;
+      var follow_data = '{"touser":"o0XCywkF-5S1fWSlQ4S2qctr9wt4", "msgtype":"text", "text":{"content":"Hello World"}}';
+      var follow_result = HTTP.post(follow_url,{content: follow_data});
+      res.end("set success" + follow_result.content);
+    } catch (err) {
+      res.end("network error " + err);
+    }
+  }, {where: 'server'});
+  
+
   Router.route('/info', function () {
     var req = this.request;
     var code = this.params.query.code;
