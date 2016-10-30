@@ -83,7 +83,7 @@ Meteor.startup(() => {
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
       var follow_url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + access_token;
-      var follow_data = '{"touser":"o0XCywkF-5S1fWSlQ4S2qctr9wt4", "msgtype":"text", "text":{"content":"Hello World"}}';
+      var follow_data = '{"touser":"o0XCywvaCR--L3LBx5c-43X2VQvY", "msgtype":"text", "text":{"content":"鸽子 么么哒(づ￣ 3￣)づ"}}';
       var follow_result = HTTP.post(follow_url,{content: follow_data});
       res.end("set success" + follow_result.content);
     } catch (err) {
