@@ -27,6 +27,23 @@ Meteor.startup(() => {
     }
   }, {where: 'server'});
 
+
+  Router.route('/setgroups', function () {
+	var res = this.response;
+	try {
+      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
+      var token_result = HTTP.get(token_url);
+      var access_token = token_result.data.access_token;
+	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=" + access_token;
+	  var group_data = '{"group":{"name":"超级用户"}}';
+	  var group_result = HTTP.post(group_url,{content: group_data});
+	  res.end("set_success" + group_result.content);
+	}catch (err){
+	  res.end("network error " + err);
+	}
+  }, {where: 'server'});
+
+
   Router.route('/setgroup', function () {
     var res = this.response;
     try {
@@ -50,7 +67,7 @@ Meteor.startup(() => {
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
       var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token=" + access_token;
-      var menu_data = '{"button":[{"type":"view","name":"课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"type":"view","name":"群组","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fdeveloping&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"name":"个人中心","sub_button":[{"type":"view","name":"个人信息","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fregist&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}],"matchrule":{"group_id":"100"}}';
+      var menu_data = '{"button":[{"name":"课程","sub_button":[{"type":"view","name":"课程列表","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"我的课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fmy_course_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"课程动态","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnotice_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}, {"name":"群组","sub_button":[{"type":"view","name":"课程群组","url":"https://www.wangdeyi.cc/developing"},{"type":"view","name":"个人群组","url":"https://www.wangdeyi.cc/developing"},{"type":"view","name":"创建群组","url":"https://www.wangdeyi.cc/developing"}]},{"name":"个人中心","sub_button":[{"type":"view","name":"课程表","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fschedule&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"type":"view","name":"联系人","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcontact_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"type":"view","name":"个人信息","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}],"matchrule":{"group_id":"103"}}';
       var menu_result = HTTP.post(menu_url,{content: menu_data});
       res.end("set success" + menu_result.content);
     } catch (err) {
@@ -65,7 +82,7 @@ Meteor.startup(() => {
       var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
       var token_result = HTTP.get(token_url);
       var access_token = token_result.data.access_token;
-      var follow_url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" + access_token;
+      var follow_url = "https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token=" + access_token;
       //var follow_data = '{"touser":"o0XCywvaCR--L3LBx5c-43X2VQvY", "msgtype":"text", "text":{"content":"鸽子 么么哒(づ￣ 3￣)づ"}}';
       //var follow_result = HTTP.post(follow_url,{content: follow_data});
       var follow_result = HTTP.get(follow_url);
@@ -74,7 +91,7 @@ Meteor.startup(() => {
       res.end("network error " + err);
     }
   }, {where: 'server'});
-
+  
 
   Router.route('/info', function () {
     var req = this.request;
