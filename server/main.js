@@ -108,7 +108,7 @@ Meteor.startup(() => {
               else
                 sex = "女";
 
-              Session.set('openid', 'userinfo_data.openid');
+              Session.set('openid', userinfo_data.openid);
 
               SSR.compileTemplate('regist', Assets.getText('regist.html'));
               Template.regist.helpers({
