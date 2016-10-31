@@ -87,15 +87,42 @@ Meteor.startup(() => {
     }
   }, {where: 'server'});
 
-   Router.route('/regist', function () {
-      var res = this.response;
+  Router.route('/regist', function () {
+    var req = this.request;
+    var code = this.params.query.code;
+    var res = this.response;
+    try {
+      var oauth2_url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + config.appID + '&secret=' + config.appsecret + '&code=' + code + '&grant_type=authorization_code';
+      var oauth2_result = HTTP.get(oauth2_url);
+      var oauth2_data = JSON.parse(oauth2_result.content);
+      var openid = oauth2_data.openid;
+      var access_token = oauth2_data.access_token;
+
+      var userinfo_url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
+      var userinfo_result = HTTP.get(userinfo_url);
+      var userinfo_data = JSON.parse(userinfo_result.content);
+
+      var sex;
+      if(userinfo_data.sex == 1)
+        sex = "男";
+      else
+        sex = "女";
+
       SSR.compileTemplate('regist', Assets.getText('regist.html'));
       Template.regist.helpers({
-
+        sex: sex,
+        country: userinfo_data.country,
+        province: userinfo_data.province,
+        city: userinfo_data.city,
+        nickname: userinfo_data.nickname,
+        headimgurl: userinfo_data.headimgurl
       });
       var html = SSR.render("regist");
       res.end(html);
-   },{where: 'server'});
+    } catch (err) {
+      console.log("network error " + err);
+    }
+  }, {where: 'server'});
 
    Router.route('/regist_student', function () {
        var res = this.response;
