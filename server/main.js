@@ -108,8 +108,6 @@ Meteor.startup(() => {
               else
                 sex = "女";
 
-              Session.set('openid', openid);
-
               SSR.compileTemplate('regist', Assets.getText('regist.html'));
               Template.regist.helpers({
                 sex: sex,
@@ -130,7 +128,7 @@ Meteor.startup(() => {
        var res = this.response;
        SSR.compileTemplate('regist_student', Assets.getText('regist_student.html'));
        Template.regist_student.helpers({
-           openid : function() { return Session.get('openid'); }
+
        });
        var html = SSR.render("regist_student");
        res.end(html);
@@ -140,7 +138,7 @@ Meteor.startup(() => {
         var res = this.response;
         SSR.compileTemplate('regist_teacher', Assets.getText('regist_teacher.html'));
         Template.regist_teacher.helpers({
-            openid : function() { return Session.get('openid'); }
+
         });
         var html = SSR.render("regist_teacher");
         res.end(html);
