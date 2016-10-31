@@ -134,6 +134,16 @@ Meteor.startup(() => {
        res.end(html);
    },{where: 'server'});
 
+    Router.route('/regist_teacher', function () {
+        var res = this.response;
+        SSR.compileTemplate('regist_teacher', Assets.getText('regist_teacher.html'));
+        Template.regist_teacher.helpers({
+
+        });
+        var html = SSR.render("regist_teacher");
+        res.end(html);
+    },{where: 'server'});
+
   Router.route('/info', function () {
     var req = this.request;
     var code = this.params.query.code;
