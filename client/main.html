@@ -5,19 +5,14 @@
   <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
 </head>
 <body>
-
+  
   <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </body>
 
 <template name="Home">
   <h1>hello everyone</h1>
-  <!--
-    <a class="btn btn-default" href="/setmenu">设置菜单按钮</a>
-    <a class="btn btn-default" href="/setgroups">设置用户分组</a>
-    -->
-    <a class="btn btn-default" href="/setgroup">设置超级用户</a>
-    <a class="btn btn-success" href="/notify">通知</a>
+  <a class="btn btn-default" href="/setmenu">设置菜单按钮</a>
 </template>
 
 <template name="Notify">
@@ -28,10 +23,6 @@
           <div class="form-group">
             <label for="infoBegin">通知详情</label>
             <input type="text" name="infoBegin" id="infoBegin" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="openIds">收件人</label>
-            <textarea name="openIds" id="openIds" placeholder="收件人-openId-回车符分隔" rows="5" class="form-control"></textarea>
           </div>
           <div class="form-group">
             <label for="course">课程名</label>
@@ -47,49 +38,6 @@
           </div>
           <button type="submit" class="btn btn-default">通知</button>
         </form>
-      </div>
-    </div>
-  </div>
-</template>
-
-<template name="Notify">
-  <div class="weui_cells">
-    <div class="weui_cell">
-      <div class="weui_cell_bd weui_cell_primary">
-        <p>头像</p>
-      </div>
-      <div class="weui_cell_ft">
-        <img src="{{headimgurl}}" alt="icon" style="width:70px;margin-right:5px;display:block">
-      </div>
-    </div>
-  </div>
-  <div class="weui_cells">
-    <div class="weui_cell">
-      <div class="weui_cell_bd weui_cell_primary">
-        <p>昵称</p>
-      </div>
-      <div class="weui_cell_ft">
-        {{nickname}}
-      </div>
-    </div>
-  </div>
-  <div class="weui_cells">
-    <div class="weui_cell">
-      <div class="weui_cell_bd weui_cell_primary">
-        <p>性别</p>
-      </div>
-      <div class="weui_cell_ft">
-        {{sex}}
-      </div>
-    </div>
-  </div>
-  <div class="weui_cells">
-    <div class="weui_cell">
-      <div class="weui_cell_bd weui_cell_primary">
-        <p>地区</p>
-      </div>
-      <div class="weui_cell_ft">
-        {{country}} {{province}} {{city}}
       </div>
     </div>
   </div>

@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <title>kingke</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+  <link rel="stylesheet" href="/css/weui.min.css" />
+</head>
+
+<body style="background-color: #f8f8f8;">
+  <form action="/course_add_form" method="post" id="course_add_form">
+    <div class="weui-cells__title">题目</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <input class="weui-input" type="text" name="name" placeholder="请输入题目" />
+        </div>
+      </div>
+    </div>
+
+    <div class="weui-cells__title">简介</div>
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea" placeholder="请输入简介" name="info" rows="5"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <input type="text" style="display:none;" name="uid" value="{{uid}}"/>
+
+    <div class="weui-btn-area">
+      <a href="javascript:document.getElementById('course_add_form').submit();" class="weui-btn weui-btn_primary">添加课程</a>
+    </div>
+  </form>
+</body>
+
+</html>

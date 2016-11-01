@@ -1,40 +1,31 @@
 <html>
+
 <head>
-	<title>动态页面</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="/weui.css">
+	<title>kingke</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+	<link rel="stylesheet" href="/css/weui.min.css" />
 </head>
-<body>
-	<h1>动态页面</h1>
-	<div class="weui_cells">
-		  <div class="weui_cell">
-			<div class="weui_cell_bd weui_cell_primary">
-			  <p>动态1</p>
+
+<body style="background-color: #f8f8f8;">
+
+	<div class="weui-panel">
+		<div class="weui-panel__hd">我的动态</div>
+		<div class="weui-panel__bd">
+      {{#each newslist}}
+			<div class="weui-media-box weui-media-box_text">
+				<h4 class="weui-media-box__title">{{course}}</h4>
+				<p class="weui-media-box__desc">{{infoBegin}}</p>
+				<p class="weui-media-box__desc">{{infoEnd}}</p>
+				<ul class="weui-media-box__info">
+					<li class="weui-media-box__info__meta">{{time}}</li>
+          <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{teacher}}</li>
+				</ul>
 			</div>
-			<div class="weui_cell_ft">
-			  动态动态动态
-			</div>
+      {{/each}}
 		</div>
 	</div>
-	<div class="weui_cells">
-		  <div class="weui_cell">
-			<div class="weui_cell_bd weui_cell_primary">
-			  <p>动态2</p>
-			</div>
-			<div class="weui_cell_ft">
-			  动态动态
-			</div>
-		</div>
-	</div>
-	<div class="weui_cells">
-		  <div class="weui_cell">
-			<div class="weui_cell_bd weui_cell_primary">
-			  <p>动态3</p>
-			</div>
-			<div class="weui_cell_ft">
-			  动态动态
-			</div>
-		</div>
-	</div>
+
 </body>
+
 </html>

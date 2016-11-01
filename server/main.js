@@ -1,261 +1,396 @@
 import { Meteor } from 'meteor/meteor';
-import { HTTP } from 'meteor/http';
-var config = require("./config.js")
+var config = require('./config.js');
+var wxService = require('./service/wx.js');
+var courseService = require('./service/course.js');
+var chapterService = require('./service/chapter.js');
+var newsService = require('./service/news.js');
+var userService = require('./service/user.js');
+var marked = require('marked');
+var check = [];
 
 Meteor.startup(() => {
-  // code to run on server at startup
-
-  Router.route('/weixin', function () {
-    var req = this.request;
-    var res = this.response;
-    var signature = this.params.query.signature;
-    var timestamp = this.params.query.timestamp;
-    var nonce = this.params.query.nonce;
-    var echostr = this.params.query.echostr;
-    var l = new Array();
-    l[0] = nonce;
-    l[1] = timestamp;
-    l[2] = config.token;
-    l.sort();
-    var original = l.join('');
-    var sha = CryptoJS.SHA1(original).toString();
-    if (signature == sha) {
-      res.end(echostr);
-    } else {
-      res.end("false");
-    }
-  }, {where: 'server'});
-
-  Router.route('/setgroups', function () {
-	var res = this.response;
-	try {
-      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
-      var token_result = HTTP.get(token_url);
-      var access_token = token_result.data.access_token;
-	  var group_url = "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=" + access_token;
-	  var group_data = '{"group":{"name":"超级用户"}}';
-	  var group_result = HTTP.post(group_url,{content: group_data});
-	  res.end("set_success" + group_result.content);
-	}catch (err){
-	  res.end("network error " + err);
-	}
-  }, {where: 'server'});
-
-  Router.route('/setgroup', function () {
-    var res = this.response;
-    try {
-      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
-      var token_result = HTTP.get(token_url);
-      var access_token = token_result.data.access_token;
-      var group_url = "https://api.weixin.qq.com/cgi-bin/groups/members/update?access_token=" + access_token;
-      var group_data = '{"openid":"o0XCywkF-5S1fWSlQ4S2qctr9wt4","to_groupid":102}';
-      var group_result = HTTP.post(group_url,{content: group_data});
-      res.end("set_success" + group_result.content);
-    }catch (err){
-      res.end("network error " + err);
-    }
-  }, {where: 'server'});
-
-  Router.route('/setmenu', function () {
-    var res = this.response;
-    try {
-      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
-      var token_result = HTTP.get(token_url);
-      var access_token = token_result.data.access_token;
-      var menu_url = "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token=" + access_token;
-      var menu_data = '{"button":[{"name":"课程","sub_button":[{"type":"view","name":"课程列表","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcourse_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"我的课程","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fmy_own_course_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"},{"type":"view","name":"发通知","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fnotice&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}, {"name":"群组","sub_button":[{"type":"view","name":"课程群组","url":"https://www.wangdeyi.cc/developing"},{"type":"view","name":"个人群组","url":"https://www.wangdeyi.cc/developing"},{"type":"view","name":"创建群组","url":"https://www.wangdeyi.cc/developing"}]},{"name":"个人中心","sub_button":[{"type":"view","name":"课程表","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fmy_own_schedule&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"type":"view","name":"联系人","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Fcontact_list&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}, {"type":"view","name":"个人信息","url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appID + '&redirect_uri=http%3A%2F%2F' + config.url + '%2Finfo&response_type=code&scope=snsapi_userinfo&state=lc#wechat_redirect"}]}],"matchrule":{"group_id":"102"}}';
-      var menu_result = HTTP.post(menu_url,{content: menu_data});
-      res.end("set success" + menu_result.content);
-    } catch (err) {
-      res.end("network error " + err);
-    }
-  }, {where: 'server'});
-
-  Router.route('/follow', function () {
-    var res = this.response;
-    try {
-      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
-      var token_result = HTTP.get(token_url);
-      var access_token = token_result.data.access_token;
-      var follow_url = "https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token=" + access_token;
-      //var follow_data = '{"touser":"o0XCywvaCR--L3LBx5c-43X2VQvY", "msgtype":"text", "text":{"content":"鸽子 么么哒(づ￣ 3￣)づ"}}';
-      //var follow_result = HTTP.post(follow_url,{content: follow_data});
-      var follow_result = HTTP.get(follow_url);
-      res.end("set success" + follow_result.content);
-    } catch (err) {
-      res.end("network error " + err);
-    }
-  }, {where: 'server'});
-
-  Router.route('/regist', function () {
-        var req = this.request;
-        var code = this.params.query.code;
-        var res = this.response;
-        try {
-              var oauth2_url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + config.appID + '&secret=' + config.appsecret + '&code=' + code + '&grant_type=authorization_code';
-              var oauth2_result = HTTP.get(oauth2_url);
-              var oauth2_data = JSON.parse(oauth2_result.content);
-              var openid = oauth2_data.openid;
-              var access_token = oauth2_data.access_token;
-
-              var userinfo_url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
-              var userinfo_result = HTTP.get(userinfo_url);
-              var userinfo_data = JSON.parse(userinfo_result.content);
-
-              var sex;
-              if(userinfo_data.sex == 1)
-                sex = "男";
-              else
-                sex = "女";
-
-              SSR.compileTemplate('regist', Assets.getText('regist.html'));
-              Template.regist.helpers({
-                sex: sex,
-                country: userinfo_data.country,
-                province: userinfo_data.province,
-                city: userinfo_data.city,
-                nickname: userinfo_data.nickname,
-                headimgurl: userinfo_data.headimgurl
-              });
-              var html = SSR.render("regist");
-              res.end(html);
-        } catch (err) {
-              console.log("network error " + err);
+  if (Meteor.isServer) {
+    // 修改iron:router,以满足xml请求
+    Router.configureBodyParsers = function() {
+      Router.onBeforeAction(Iron.Router.bodyParser.json());
+      Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));
+      // Enable incoming XML requests for creditReferral route
+      Router.onBeforeAction(
+        Iron.Router.bodyParser.raw({
+          type: '*/*',
+          verify: function(req, res, body) {
+            req.rawBody = body.toString();
+          }
+        }),
+        {
+          only: ['weixin'],
+          where: 'server'
         }
+      );
+    };
+
+    // 自动设置meteor菜单
+    var setMenuResponse = wxService.setMenu();
+    console.log(setMenuResponse);
+  }
+
+  Router.route('/weixin', {where: 'server'})
+    .get(function() {
+      var signature = this.params.query.signature;
+      var timestamp = this.params.query.timestamp;
+      var nonce = this.params.query.nonce;
+      var echostr = this.params.query.echostr;
+      var result = wxService.checkToken(nonce, timestamp, signature, echostr);
+      var res = this.response;
+      res.end(result);
+    })
+    .post(function() {
+      var result = xml2js.parseStringSync(this.request.rawBody);
+      var repeat = result.xml.FromUserName.join('') + result.xml.CreateTime.join('');
+      var dothing = true;
+      for (var x in check) {
+        if (check[x] === repeat) {
+          dothing = false;
+          break;
+        }
+      }
+      if (result.xml && dothing) {
+        check.push(repeat);
+        if (result.xml.Event[0] === 'subscribe') {
+          userService.addUser(result.xml.FromUserName[0]);
+        }
+        if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
+          var qrcodeid = result.xml.EventKey.join('');
+          qrcodeid = qrcodeid.replace(/qrscene_/, '');
+          qrcodeid = parseInt(qrcodeid, 10);
+          var templateData;
+          if (qrcodeid < 1000000) {
+            var followid = qrcodeid;
+            var teacher = userService.getUserInfoByUid(followid);
+            var student = userService.getUser(result.xml.FromUserName[0]);
+
+            templateData = {
+              text: {
+                value: '你已关注 ' + teacher.nickname,
+                color: '#173177'
+              }
+            };
+            wxService.sendTemplate(student.openid, config.follow_template_id, null, templateData);
+
+            if (!userService.isFollowed(teacher.openid, student.openid)) {
+              templateData = {
+                text: {
+                  value: '你已被 ' + student.nickname + ' 关注',
+                  color: '#173177'
+                }
+              };
+              wxService.sendTemplate(teacher.openid, config.follow_template_id, null, templateData);
+              userService.addFollower(teacher.openid, student.openid);
+            }
+          } else {
+            var course = courseService.courseInfoByQrcode(qrcodeid);
+
+            templateData = {
+              text: {
+                value: '你已加入《' + course.name + '》',
+                color: '#173177'
+              }
+            };
+            student = userService.getUser(result.xml.FromUserName[0]);
+            wxService.sendTemplate(
+              student.openid,
+              config.follow_template_id,
+              config.url + '/course_info_student/' + course._id,
+              templateData);
+
+            if (!courseService.isChooseCourse(course._id, student.openid)) {
+              courseService.chooseCourse(course._id, student.openid);
+            }
+          }
+        }
+      }
+      this.response.end('');
+    });
+
+  Router.route('/setmenu', function() {
+    var res = this.response;
+    res.end(wxService.setMenu());
   }, {where: 'server'});
 
-   Router.route('/regist_student', function () {
-       var res = this.response;
-       SSR.compileTemplate('regist_student', Assets.getText('regist_student.html'));
-       Template.regist_student.helpers({
-
-       });
-       var html = SSR.render("regist_student");
-       res.end(html);
-   },{where: 'server'});
-
-    Router.route('/regist_teacher', function () {
-        var res = this.response;
-        SSR.compileTemplate('regist_teacher', Assets.getText('regist_teacher.html'));
-        Template.regist_teacher.helpers({
-
-        });
-        var html = SSR.render("regist_teacher");
-        res.end(html);
-    },{where: 'server'});
-
-  Router.route('/info', function () {
-    var req = this.request;
+  Router.route('/info', function() {
     var code = this.params.query.code;
     var res = this.response;
     try {
-      var oauth2_url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + config.appID + '&secret=' + config.appsecret + '&code=' + code + '&grant_type=authorization_code';
-      var oauth2_result = HTTP.get(oauth2_url);
-      var oauth2_data = JSON.parse(oauth2_result.content);
-      var openid = oauth2_data.openid;
-      var access_token = oauth2_data.access_token;
-      
-      var userinfo_url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
-      var userinfo_result = HTTP.get(userinfo_url);
-      var userinfo_data = JSON.parse(userinfo_result.content);
-
-	  var sex;
-	  if(userinfo_data.sex == 1)
-		  sex = "男";
-	  else
-		  sex = "女";
-
+      var userinfoData = wxService.oauth(code);
+      var user = userService.getUser(userinfoData.openid);
+      var qrcodeImg = wxService.qrcode(user.uid);
       SSR.compileTemplate('info', Assets.getText('info.html'));
       Template.info.helpers({
-		sex: sex,
-        country: userinfo_data.country,
-        province: userinfo_data.province,
-        city: userinfo_data.city,
-        nickname: userinfo_data.nickname,
-        headimgurl: userinfo_data.headimgurl
+        country: userinfoData.country,
+        province: userinfoData.province,
+        city: userinfoData.city,
+        nickname: userinfoData.nickname,
+        headimgurl: userinfoData.headimgurl,
+        qrcodeurl: qrcodeImg
       });
-      var html = SSR.render("info");
+      var html = SSR.render('info');
       res.end(html);
     } catch (err) {
-      console.log("network error " + err);
+      console.log('network error ' + err);
     }
   }, {where: 'server'});
 
+  Router.route('/notify', function() {
+    var code = this.params.query.code;
+    var userinfoData = wxService.oauth(code);
+    var user = userService.getUser(userinfoData.openid);
+    var courselist = courseService.teacherCourse(user.uid);
+    var res = this.response;
+    SSR.compileTemplate('notify', Assets.getText('notify.html'));
+    Template.notify.helpers({
+      uid: user.uid,
+      courselist: courselist
+    });
+    var html = SSR.render('notify');
+    res.end(html);
+  }, {where: 'server'});
 
-  Router.route("/notifyAns", function () {
+  Router.route('/notifyAns', function() {
     var req = this.request;
-    var openIds = req.body.openIds;
+    var res = this.response;
     var infoBegin = req.body.infoBegin;
     var course = req.body.course;
     var teacher = req.body.teacher;
     var infoEnd = req.body.infoEnd;
-    var openIds = openIds.split("\n");
     var nowDate = new Date();
-    var time = nowDate.toLocaleDateString() + " "+ nowDate.toLocaleTimeString();
-    for (x in openIds) {
-      var openId = openIds[x].replace(/^\s+|\s+$/g,"");
-      if (openId == "") {
-        continue;
-      }
+    var time = nowDate.toLocaleDateString() + ' ' + nowDate.toLocaleTimeString();
+    var openIds = [];
+    var receive = req.body.receive;
+    var url = '';
+    if (receive && receive.search(/uid_/) >= 0) {
+      receive = receive.replace(/uid_/, '');
+      var user = userService.getUserInfoByUid(parseInt(receive, 10));
+      openIds = user.follower;
+    } else if (receive && receive.search(/cid_/) >= 0) {
+      receive = receive.replace(/cid_/, '');
+      var courseinfo = courseService.courseInfo(receive);
+      openIds = courseinfo.student;
+      url = config.url + '/course_info_student/' + courseinfo._id;
+    }
+    for (var x in openIds) {
+      if (openIds.hasOwnProperty(x)) {
+        var openId = openIds[x].replace(/^\s+|\s+$/g, '');
+        if (!openId) {
+          continue;
+        }
 
-      var res = this.response;
-      var token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + config.appID + "&secret=" + config.appsecret;
-      var token_result = HTTP.get(token_url);
-      var access_token = token_result.data.access_token;
-      var templet_url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + access_token;
-      var templet_data = '{"touser":"' + openId + '","template_id":"' + config.notify_templet_id + '","url":"","data":{"first": {"value":"' + infoBegin + '","color":"#173177"},"keyword1":{"value":"' + course + '","color":"#173177"},"keyword2": {"value":"'+teacher+'","color":"#173177"},"keyword3": {"value":"'+time+'","color":"#173177"},"remark":{"value":"'+infoEnd+'","color":"#173177"}}}';
-      var templet_result = HTTP.post(templet_url, {content: templet_data});
-      infomation = templet_result.content;
-      res.write(openId);
-      res.write("\n")
-      res.write(infomation);
-      res.write("\n")
+        var templateData = {
+          'first': {
+            'value': infoBegin,
+            'color': '#173177'
+          },
+          'keyword1': {
+            'value': course,
+            'color': '#173177'
+          },
+          'keyword2': {
+            'value': teacher,
+            'color': '#173177'
+          },
+          'keyword3': {
+            'value': time,
+            'color': '#173177'
+          },
+          'remark': {
+            'value': infoEnd,
+            'color': '#173177'
+          }
+        };
+        var templateResult = wxService.sendTemplate(openId, config.notify_template_id, url, templateData);
+        newsService.saveNews(openId, infoBegin, course, teacher, time, infoEnd);
+        var infomation = templateResult.content;
+        res.write(openId);
+        res.write('\n');
+        res.write(infomation);
+        res.write('\n');
+      }
     }
     res.end();
   }, {where: 'server'});
 
-
-  Router.route('/news', function () {
+  Router.route('/news', function() {
+    var code = this.params.query.code;
+    var userinfoData = wxService.oauth(code);
+    var newslist = newsService.userNews(userinfoData.openid);
     var res = this.response;
     SSR.compileTemplate('news', Assets.getText('news.html'));
     Template.news.helpers({
-      
+      newslist: newslist.reverse()
     });
-    var html = SSR.render("news");
+    var html = SSR.render('news');
     res.end(html);
-  },{where: 'server'});
+  }, {where: 'server'});
 
-
-  Router.route('/course', function () {
+  Router.route('/course', function() {
+    var code = this.params.query.code;
+    var userinfoData = wxService.oauth(code);
+    var courselist = courseService.studentCourse(userinfoData.openid);
     var res = this.response;
     SSR.compileTemplate('course', Assets.getText('course.html'));
     Template.course.helpers({
-      
+      courselist: courselist
     });
-    var html = SSR.render("course");
+    var html = SSR.render('course');
     res.end(html);
-  },{where: 'server'});
+  }, {where: 'server'});
 
-
-  Router.route('/course_manage', function () {
+  Router.route('/course_manage', function() {
+    var code = this.params.query.code;
+    var userinfoData = wxService.oauth(code);
+    var userinfo = userService.getUser(userinfoData.openid);
+    var courselist = courseService.teacherCourse(userinfo.uid);
     var res = this.response;
     SSR.compileTemplate('course_manage', Assets.getText('course_manage.html'));
     Template.course_manage.helpers({
-      
+      courselist: courselist,
+      uid: userinfo.uid
     });
-    var html = SSR.render("course_manage");
+    var html = SSR.render('course_manage');
     res.end(html);
-  },{where: 'server'});
+  }, {where: 'server'});
 
-
-  Router.route('/contacts', function () {
+  Router.route('/course_add/:_uid', function() {
+    var uid = this.params._uid;
     var res = this.response;
-    SSR.compileTemplate('contacts', Assets.getText('contacts.html'));
-    Template.news.helpers({
-      
+    SSR.compileTemplate('course_add', Assets.getText('course_add.html'));
+    Template.course_add.helpers({
+      uid: uid
     });
-    var html = SSR.render("contacts");
+    var html = SSR.render('course_add');
     res.end(html);
-  },{where: 'server'});
-  
+  }, {where: 'server'});
+
+  Router.route('/course_add_form', function() {
+    var req = this.request;
+    var uid = req.body.uid;
+    var name = req.body.name;
+    var info = req.body.info;
+    courseService.saveCourse(parseInt(uid, 10), name, info);
+    var res = this.response;
+    res.end('success');
+  }, {where: 'server'});
+
+  Router.route('/chapter_add/:_cid', function() {
+    var cid = this.params._cid;
+    var res = this.response;
+    SSR.compileTemplate('chapter_add', Assets.getText('chapter_add.html'));
+    Template.chapter_add.helpers({
+      cid: cid
+    });
+    var html = SSR.render('chapter_add');
+    res.end(html);
+  }, {where: 'server'});
+
+  Router.route('/chapter_add_form', function() {
+    var req = this.request;
+    var cid = req.body.cid;
+    var name = req.body.name;
+    var info = req.body.info;
+    chapterService.saveChapter(cid, name, info);
+
+    var redirectUrl = 'http://' + config.url + '/course_info/' + cid;
+    this.response.writeHead(302, {
+      'Location': redirectUrl
+    });
+    this.response.end();
+  }, {where: 'server'});
+
+  Router.route('/course_info/:_id', function() {
+    var id = this.params._id;
+    var course = courseService.courseInfo(id);
+    if (!course) {
+      return;
+    }
+    var qrcodeurl = wxService.qrcode(course.qrcodeid);
+    var chapterList = chapterService.courseChapters(course._id);
+    var res = this.response;
+    SSR.compileTemplate('course_info', Assets.getText('course_info.html'));
+    Template.course_info.helpers({
+      cid: course._id,
+      chapterList: chapterList,
+      qrcodeurl: qrcodeurl
+    });
+    var html = SSR.render('course_info');
+    res.end(html);
+  }, {where: 'server'});
+
+  Router.route('/course_info_student/:_id', function() {
+    var id = this.params._id;
+    var course = courseService.courseInfo(id);
+    if (!course) {
+      return;
+    }
+    var qrcodeurl = wxService.qrcode(course.qrcodeid);
+    var chapterList = chapterService.courseChapters(course._id);
+    var res = this.response;
+    SSR.compileTemplate('course_info_student', Assets.getText('course_info_student.html'));
+    Template.course_info_student.helpers({
+      cid: course._id,
+      chapterList: chapterList,
+      qrcodeurl: qrcodeurl
+    });
+    var html = SSR.render('course_info_student');
+    res.end(html);
+  }, {where: 'server'});
+
+  Router.route('/chapter_info/:_id', function() {
+    var id = this.params._id;
+    var chapter = chapterService.chapterInfo(id);
+    var res = this.response;
+    SSR.compileTemplate('course_chapter_info', Assets.getText('course_chapter_info.html'));
+    Template.course_chapter_info.helpers({
+      info: marked(chapter.info)
+    });
+    var html = SSR.render('course_chapter_info');
+    res.end(html);
+  }, {where: 'server'});
+
+  Router.route('/course_introduction/:_id', function() {
+    var id = this.params._id;
+    var course = courseService.courseInfo(id);
+    var res = this.response;
+    SSR.compileTemplate('course_chapter_info', Assets.getText('course_chapter_info.html'));
+    Template.course_chapter_info.helpers({
+      info: marked(course.info)
+    });
+    var html = SSR.render('course_chapter_info');
+    res.end(html);
+  }, {where: 'server'});
+
+  Router.route('/contacts', function() {
+    var res = this.response;
+    var code = this.params.query.code;
+    var userinfoData = wxService.oauth(code);
+    var followeesId = userService.getFollowees(userinfoData.openid);
+    var followees = [];
+    for (var x in followeesId) {
+      if (followeesId.hasOwnProperty(x)) {
+        followees.push(userService.getUser(followeesId[x].openid));
+      }
+    }
+    var followersId = userService.getUser(userinfoData.openid);
+    var followers = [];
+    for (var y in followersId.follower) {
+      if (followersId.follower.hasOwnProperty(y)) {
+        followers.push(userService.getUser(followersId.follower[y]));
+      }
+    }
+    SSR.compileTemplate('contacts', Assets.getText('contacts.html'));
+    Template.contacts.helpers({
+      followees: followees,
+      followers: followers
+    });
+    var html = SSR.render('contacts');
+    res.end(html);
+  }, {where: 'server'});
 });

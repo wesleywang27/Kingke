@@ -1,0 +1,77 @@
+<html>
+
+<head>
+  <title>kingke</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+  <link rel="stylesheet" href="/css/weui.min.css" />
+</head>
+
+<body style="background-color: #f8f8f8;">
+  <form action="/notifyAns" method="post" id="notify_form">
+
+    <div class="weui-cells__title">通知详情</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <input class="weui-input" type="text" name="infoBegin" id="infoBegin" placeholder="请输入通知详情">
+        </div>
+      </div>
+    </div>
+
+    <div class="weui-cells__title">课程名</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <input class="weui-input" type="text" name="course" id="course" placeholder="请输入课程名">
+        </div>
+      </div>
+    </div>
+
+    <div class="weui-cells__title">教师</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <input class="weui-input" type="text" name="teacher" id="teacher" placeholder="请输入教师">
+        </div>
+      </div>
+    </div>
+
+    <div class="weui-cells__title">结尾</div>
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <input class="weui-input" type="text" name="infoEnd" id="infoEnd" placeholder="请输入结尾">
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells__title">收件人</div>
+    <div class="weui-cells weui-cells_radio">
+      <label class="weui-cell weui-check__label" for="x11">
+        <div class="weui-cell__bd">
+          <p>所有粉丝</p>
+        </div>
+        <div class="weui-cell__ft">
+          <input type="radio" class="weui-check" name="receive" id="x11" value="uid_{{uid}}"  checked="checked">
+          <span class="weui-icon-checked"></span>
+        </div>
+      </label>
+      {{#each courselist}}
+      <label class="weui-cell weui-check__label" for="{{_id}}">
+        <div class="weui-cell__bd">
+          <p>{{name}}-所有同学</p>
+        </div>
+        <div class="weui-cell__ft">
+          <input type="radio" name="receive" class="weui-check" id="{{_id}}" value="cid_{{_id}}">
+          <span class="weui-icon-checked"></span>
+        </div>
+      </label>
+      {{/each}}
+    </div>
+    <div class="weui-btn-area">
+      <a href="javascript:document.getElementById('notify_form').submit();" class="weui-btn weui-btn_primary">通知</a>
+    </div>
+  </form>
+</body>
+
+</html>

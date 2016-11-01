@@ -26,6 +26,7 @@ vim server/config.js
 
 ### 初次启动项目
 ```
+meteor npm install --save marked
 sudo meteor --port 80
 ```
 此时你可以在`http://你服务器的ip地址`上看到运行效果
