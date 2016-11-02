@@ -168,7 +168,7 @@ exports.setMenu = function() {
             {
               'type': 'view',
               'name': '课程管理',
-              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manager') + oauth2UrlEnd
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manage') + oauth2UrlEnd
             },
             {
               'type': 'view',
