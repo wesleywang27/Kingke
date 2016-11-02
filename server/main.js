@@ -66,7 +66,7 @@ Meteor.startup(() => {
               color: '#173177'
             }
           };
-          wxService.sendTemplate(student.openid, config.register_template_id, null, templateData);
+          wxService.sendTemplate(student.openid, config.register_template_id, oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/info') + oauth2UrlEnd, templateData);
         }
         if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
           var qrcodeid = result.xml.EventKey.join('');
