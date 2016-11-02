@@ -167,6 +167,11 @@ exports.setMenu = function() {
             },
             {
               'type': 'view',
+              'name': '课程管理',
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manager') + oauth2UrlEnd
+            },
+            {
+              'type': 'view',
               'name': '创建课程',
               'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_add/{{uid}}') + oauth2UrlEnd
             }
