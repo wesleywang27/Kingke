@@ -162,13 +162,13 @@ exports.setMenu = function() {
           'sub_button':[
             {
               'type': 'view',
-              'name': '我的课程',
-              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course') + oauth2UrlEnd
+              'name': '课程列表',
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manage') + oauth2UrlEnd
             },
             {
               'type': 'view',
-              'name': '课程管理',
-              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manage') + oauth2UrlEnd
+              'name': '我的课程',
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course') + oauth2UrlEnd
             },
             {
               'type': 'view',
