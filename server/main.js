@@ -58,6 +58,15 @@ Meteor.startup(() => {
         check.push(repeat);
         if (result.xml.Event[0] === 'subscribe') {
           userService.addUser(result.xml.FromUserName[0]);
+          var student = userService.getUser(result.xml.FromUserName[0]);
+
+          templateData = {
+            text: {
+              value: '欢迎 ' + student.nickname + '\n 请在个人中心选择身份',
+              color: '#173177'
+            }
+          };
+          wxService.sendTemplate(student.openid, config.register_template_id, null, templateData);
         }
         if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
           var qrcodeid = result.xml.EventKey.join('');
@@ -92,7 +101,7 @@ Meteor.startup(() => {
 
             templateData = {
               text: {
-                value: '你已加入《' + course.name + '》',
+                value: '你已加入《' + course.name + '》课程',
                 color: '#173177'
               }
             };
@@ -277,7 +286,7 @@ Meteor.startup(() => {
     var info = req.body.info;
     courseService.saveCourse(parseInt(uid, 10), name, info);
     var res = this.response;
-    res.end('success');
+    res.end('创建成功！');
   }, {where: 'server'});
 
   Router.route('/chapter_add/:_cid', function() {
