@@ -62,7 +62,7 @@ Meteor.startup(() => {
 
           templateData = {
             text: {
-              value: '欢迎 ' + student.nickname + '\n 请在个人中心选择身份',
+              value: '\n欢迎' + student.nickname + '关注中科大课程信息平台——kingke公众号。\n为了您方便使用，请您尽快在个人中心进行身份验证。',
               color: '#173177'
             }
           };
