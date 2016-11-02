@@ -143,23 +143,38 @@ exports.setMenu = function() {
     var menuData = {
       'button': [
         {
-          'type': 'view',
-          'name': '动态',
-          'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/news') + oauth2UrlEnd
+          'name': '消息中心',
+          'sub_button':[
+              {
+                'type': 'view',
+                'name': '通知列表',
+                'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/news') + oauth2UrlEnd
+              },
+              {
+                'type': 'view',
+                'name': '发通知',
+                'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/notify') + oauth2UrlEnd
+              }
+          ]
         },
         {
-          'type': 'view',
-          'name': '课程',
-          'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course') + oauth2UrlEnd
-        },
-        {
-          'name': '更多',
-          'sub_button': [
+          'name': '课程中心',
+          'sub_button':[
             {
               'type': 'view',
-              'name': '课程管理',
-              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course_manage') + oauth2UrlEnd
+              'name': '课程列表',
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/course') + oauth2UrlEnd
             },
+            {
+              'type': 'view',
+              'name': '创建课程',
+              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/notify') + oauth2UrlEnd
+            }
+          ]
+        },
+        {
+          'name': '个人中心',
+          'sub_button': [
             {
               'type': 'view',
               'name': '联系人',
@@ -167,12 +182,7 @@ exports.setMenu = function() {
             },
             {
               'type': 'view',
-              'name': '发通知',
-              'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/notify') + oauth2UrlEnd
-            },
-            {
-              'type': 'view',
-              'name': '我的名片',
+              'name': '个人名片',
               'url': oauth2UrlBegin + encodeURIComponent('http://' + config.url + '/info') + oauth2UrlEnd
             }]
         }]
