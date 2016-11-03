@@ -58,6 +58,15 @@ Meteor.startup(() => {
         check.push(repeat);
         if (result.xml.Event[0] === 'subscribe') {
           userService.addUser(result.xml.FromUserName[0]);
+          var student = userService.getUser(result.xml.FromUserName[0]);
+
+          templateData = {
+            text: {
+              value: '\n欢迎' + student.nickname + '关注中科大课程信息平台——kingke公众号。\n为了您方便使用，请您尽快在个人中心进行身份验证。',
+              color: '#173177'
+            }
+          };
+          wxService.sendTemplate(student.openid, config.register_template_id, null, templateData);
         }
         if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
           var qrcodeid = result.xml.EventKey.join('');
