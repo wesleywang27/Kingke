@@ -16,16 +16,16 @@ Meteor.startup(() => {
       Router.onBeforeAction(Iron.Router.bodyParser.urlencoded({extended: false}));
       // Enable incoming XML requests for creditReferral route
       Router.onBeforeAction(
-        Iron.Router.bodyParser.raw({
-          type: '*/*',
-          verify: function(req, res, body) {
-            req.rawBody = body.toString();
+          Iron.Router.bodyParser.raw({
+            type: '*/*',
+            verify: function(req, res, body) {
+              req.rawBody = body.toString();
+            }
+          }),
+          {
+            only: ['weixin'],
+            where: 'server'
           }
-        }),
-        {
-          only: ['weixin'],
-          where: 'server'
-        }
       );
     };
 
@@ -35,91 +35,82 @@ Meteor.startup(() => {
   }
 
   Router.route('/weixin', {where: 'server'})
-    .get(function() {
-      var signature = this.params.query.signature;
-      var timestamp = this.params.query.timestamp;
-      var nonce = this.params.query.nonce;
-      var echostr = this.params.query.echostr;
-      var result = wxService.checkToken(nonce, timestamp, signature, echostr);
-      var res = this.response;
-      res.end(result);
-    })
-    .post(function() {
-      var result = xml2js.parseStringSync(this.request.rawBody);
-      var repeat = result.xml.FromUserName.join('') + result.xml.CreateTime.join('');
-      var dothing = true;
-      for (var x in check) {
-        if (check[x] === repeat) {
-          dothing = false;
-          break;
+      .get(function() {
+        var signature = this.params.query.signature;
+        var timestamp = this.params.query.timestamp;
+        var nonce = this.params.query.nonce;
+        var echostr = this.params.query.echostr;
+        var result = wxService.checkToken(nonce, timestamp, signature, echostr);
+        var res = this.response;
+        res.end(result);
+      })
+      .post(function() {
+        var result = xml2js.parseStringSync(this.request.rawBody);
+        var repeat = result.xml.FromUserName.join('') + result.xml.CreateTime.join('');
+        var dothing = true;
+        for (var x in check) {
+          if (check[x] === repeat) {
+            dothing = false;
+            break;
+          }
         }
-      }
-      if (result.xml && dothing) {
-        check.push(repeat);
-        if (result.xml.Event[0] === 'subscribe') {
-          userService.addUser(result.xml.FromUserName[0]);
-          var student = userService.getUser(result.xml.FromUserName[0]);
+        if (result.xml && dothing) {
+          check.push(repeat);
+          if (result.xml.Event[0] === 'subscribe') {
+            userService.addUser(result.xml.FromUserName[0]);
+          }
+          if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
+            var qrcodeid = result.xml.EventKey.join('');
+            qrcodeid = qrcodeid.replace(/qrscene_/, '');
+            qrcodeid = parseInt(qrcodeid, 10);
+            var templateData;
+            if (qrcodeid < 1000000) {
+              var followid = qrcodeid;
+              var teacher = userService.getUserInfoByUid(followid);
+              var student = userService.getUser(result.xml.FromUserName[0]);
 
-          templateData = {
-            text: {
-              value: '\n欢迎' + student.nickname + '关注中科大课程信息平台——kingke公众号。\n为了您方便使用，请您尽快在个人中心进行身份验证。',
-              color: '#173177'
-            }
-          };
-          wxService.sendTemplate(student.openid, config.register_template_id, null, templateData);
-        }
-        if (result.xml.EventKey && result.xml.EventKey.join('') && (result.xml.Event[0] === 'subscribe' || result.xml.Event[0] === 'SCAN')) {
-          var qrcodeid = result.xml.EventKey.join('');
-          qrcodeid = qrcodeid.replace(/qrscene_/, '');
-          qrcodeid = parseInt(qrcodeid, 10);
-          var templateData;
-          if (qrcodeid < 1000000) {
-            var followid = qrcodeid;
-            var teacher = userService.getUserInfoByUid(followid);
-            var student = userService.getUser(result.xml.FromUserName[0]);
-
-            templateData = {
-              text: {
-                value: '你已关注 ' + teacher.nickname,
-                color: '#173177'
-              }
-            };
-            wxService.sendTemplate(student.openid, config.follow_template_id, null, templateData);
-
-            if (!userService.isFollowed(teacher.openid, student.openid)) {
               templateData = {
                 text: {
-                  value: '你已被 ' + student.nickname + ' 关注',
+                  value: '你已关注 ' + teacher.nickname,
                   color: '#173177'
                 }
               };
-              wxService.sendTemplate(teacher.openid, config.follow_template_id, null, templateData);
-              userService.addFollower(teacher.openid, student.openid);
-            }
-          } else {
-            var course = courseService.courseInfoByQrcode(qrcodeid);
+              wxService.sendTemplate(student.openid, config.follow_template_id, null, templateData);
 
-            templateData = {
-              text: {
-                value: '你已加入《' + course.name + '》课程',
-                color: '#173177'
+              if (!userService.isFollowed(teacher.openid, student.openid)) {
+                templateData = {
+                  text: {
+                    value: '你已被 ' + student.nickname + ' 关注',
+                    color: '#173177'
+                  }
+                };
+                wxService.sendTemplate(teacher.openid, config.follow_template_id, null, templateData);
+                userService.addFollower(teacher.openid, student.openid);
               }
-            };
-            student = userService.getUser(result.xml.FromUserName[0]);
-            wxService.sendTemplate(
-              student.openid,
-              config.follow_template_id,
-              config.url + '/course_info_student/' + course._id,
-              templateData);
+            } else {
+              var course = courseService.courseInfoByQrcode(qrcodeid);
 
-            if (!courseService.isChooseCourse(course._id, student.openid)) {
-              courseService.chooseCourse(course._id, student.openid);
+              templateData = {
+                text: {
+                  value: '你已加入《' + course.name + '》',
+                  color: '#173177'
+                }
+              };
+              student = userService.getUser(result.xml.FromUserName[0]);
+              wxService.sendTemplate(
+                  student.openid,
+                  config.follow_template_id,
+                  config.url + '/course_info_student/' + course._id,
+                  templateData);
+
+              if (!courseService.isChooseCourse(course._id, student.openid)) {
+                courseService.chooseCourse(course._id, student.openid);
+              }
             }
           }
         }
-      }
-      this.response.end('');
-    });
+        this.response.end('');
+      });
 
   Router.route('/setmenu', function() {
     var res = this.response;
@@ -286,7 +277,7 @@ Meteor.startup(() => {
     var info = req.body.info;
     courseService.saveCourse(parseInt(uid, 10), name, info);
     var res = this.response;
-    res.end('创建成功！');
+    res.end('success');
   }, {where: 'server'});
 
   Router.route('/chapter_add/:_cid', function() {
